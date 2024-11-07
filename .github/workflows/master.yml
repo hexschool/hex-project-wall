@@ -1,0 +1,83 @@
+name: Main Deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to Repo Directory
+        uses: actions/checkout@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Restore cache node modules
+        id: cache
+        uses: actions/cache/restore@v3
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: update cache node modules
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+  main-deploy:
+    name: build and Deploy to Github Page
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to Repo Directory
+        uses: actions/checkout@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Configure Git credentials
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          global: true,
+          name: 'GithubAction'
+          email: 'alice@hexschool.com'
+          actor: 'GithubAction'
+          token: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
+      - name: Restore cache node modules
+        id: cache
+        uses: actions/cache/restore@v3
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Make env file
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_VUE_APP_PATH: 'https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/master/data.json'
+          directory: ./
+          file_name: .env
+      - name: Build
+        run: npm run build
+      - name: Make Github Page CNAME
+        run: |
+          echo ${{ secrets.DOMAIN }} > ./dist/CNAME
+      - name: deploy to dev repository
+        run: |
+          cd dist
+          git config --global user.email "alice@hexschool.com"
+          git config --global user.name "GithubAction"
+          git init
+          git remote add deploy_repo https://x-access-token:${{ secrets.DEPLOY_GITHUB_TOKEN }}@github.com/hexschool/vue-training-works.git
+          git add -A
+          git commit -m 'deploy with Github Action'
+          git push -f deploy_repo master:gh-pages

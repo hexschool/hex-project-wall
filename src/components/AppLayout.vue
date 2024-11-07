@@ -1,17 +1,34 @@
 <script setup lang="ts">
-import IconArrowRight from './icons/IconArrorRight.vue'
-import LogoHexschool from './icons/LogoHexschool.vue'
+import logo from '../assets/logo.svg';
+import IconArrowRight from './icons/IconArrorRight.vue';
+
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+import httpRequest from '../apis/httpRequest';
 
 
-import { ref } from 'vue'
+import activityCountdown from '../composables/activityCountdown';
 
-const courseNavigatorList = ref([
+
+// const { countdown, timeId } = activityCountdown()
+
+
+
+const route = useRoute();
+const router = useRouter();
+
+// onUnmounted(() => {
+//   clearInterval(timeId.value);
+// });
+
+const courseCategoryList = ref([
   {
     id: 0,
     name: '全部',
     tag: 'All',
     description: '六角學員作品牆，程式新手也能完成獨一無二的網頁作品。',
-    isActive: false,
+    isActive: true,
     relLinks: [{
       routeName: 'all-courses',
       url: 'https://www.hexschool.com/courses/?category=all-courses',
@@ -87,6 +104,24 @@ const courseNavigatorList = ref([
   },
   {
     id: 6,
+    name: 'React',
+    tag: 'React',
+    description:
+      '使用業界熱門框架完成求職作品，提升職場競爭力！',
+    isActive: false,
+    relLinks: [{
+      routeName: 'react',
+      url: 'https://www.hexschool.com/courses/react.html',
+      urlText: '前往 React 影音課！',
+    },
+    {
+      routeName: 'js-react-training',
+      url: 'https://www.hexschool.com/courses/js-react-training.html',
+      urlText: '前往前端工程師培訓班',
+    }],
+  },
+  {
+    id: 7,
     name: 'UI',
     tag: 'UI',
     description: '好的設計，讓網站品質大加分！',
@@ -98,36 +133,83 @@ const courseNavigatorList = ref([
     }],
   },
 ]);
+const courseCategoryDetail = ref({
+  name: '全部',
+  tag: 'All',
+  description: '六角學員作品牆，程式新手也能完成獨一無二的網頁作品。',
+  relLinks: [{
+    routeName: 'all-courses',
+    url: 'https://www.hexschool.com/courses/?category=all-courses',
+    urlText: '我也想做出專屬作品！',
+  }],
+});
 
-const courseName = ref('全部');
-const courseDescription = ref('六角學員作品牆，程式新手也能完成獨一無二的網頁作品。');
-const courseRelLinks = ref([{
-  routeName: 'all-courses',
-  url: 'https://www.hexschool.com/courses/?category=all-courses',
-  urlText: '我也想做出專屬作品！',
-}]);
-
+const categories = ref([]);
 const searchValue = ref('');
-const selectedTag = ref('');
 const tags = ref([]);
+const selectedTag = ref('');
 
-const deadline = ref({
-  isExpired: false,
+
+onMounted(async () => {
+  const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/refs/heads/master/category.json');
+  categories.value = data;
+
+  // 透過網址分類進來
+  if (route.query.category) {
+    const category = courseCategoryList.value.filter((courseCategory) => courseCategory.tag === route.query.category);
+    onClickHandler(category[0]);
+  }
+})
+
+const onClickHandler = (course) => {
+  // 切換 category active 
+  courseCategoryList.value = courseCategoryList.value.map((courseCategory) => ({
+    ...courseCategory,
+    isActive: courseCategory.id === course.id
+  }));
+
+  //  category 的詳細資訊
+  courseCategoryDetail.value = {
+    ...course
+  }
+
+  // tag 選項更新
+  tags.value = categories.value[course.tag];
+
+  // route 更新
+  router.replace({
+    query: {
+      ...route.query,
+      category: course.tag,
+    }
+  });
+
+};
+
+// 活動倒數公告
+const countdown = ref({
+  isExpired: true,
   seconds: 0,
   minutes: 0,
   hours: 0,
-  days: 0,
+  days: 0
 });
-defineProps<{
-  // msg: string
-}>()
+
+const deadline = ref('Nov 13 2024 23:59:59');
+if (countdown.value.isExpired) {
+  activityCountdown(deadline.value, (updatedDeadline) => {
+    countdown.value = { ...updatedDeadline };
+  });
+}
+
+
 </script>
 
 <template>
   <header class="py-3 border-bottom">
     <div class="container">
       <router-link to="/" class="d-flex align-items-center">
-        <LogoHexschool width="32" height="32" />
+        <img :src="logo" alt="六角學院作品牆" width="32" height="32">
         <h1 class="h6 mb-0">六角學院作品牆</h1>
       </router-link>
     </div>
@@ -135,21 +217,22 @@ defineProps<{
 
   <nav class="py-4">
     <ul class="nav nav-pills justify-content-start justify-content-md-center flex-nowrap overflow-auto scrollBar">
-      <li v-for="course in courseNavigatorList" :key="course.id" class="nav-item">
-        <a href="#" class="nav-link fs-5" :class="{ 'active': course.isActive }" @click.prevent="tagClicked(course)">
-          {{ course.name }}
+      <li v-for="courseCategory in courseCategoryList" :key="courseCategory.id" class="nav-item">
+        <a href="#" class="nav-link fs-5" :class="{ 'active': courseCategory.isActive }"
+          @click.prevent="onClickHandler(courseCategory)">
+          {{ courseCategory.name }}
         </a>
       </li>
     </ul>
   </nav>
 
   <section class="py-6">
-    <h2 class="h4 text-center fw-bold mb-3">{{ courseName }}</h2>
+    <h2 class="h4 text-center fw-bold mb-3">{{ courseCategoryDetail.name }}</h2>
     <p class="text-center fw-normal mb-3">
-      {{ courseDescription }}
+      {{ courseCategoryDetail.description }}
     </p>
     <div class="d-flex justify-content-center">
-      <div class="mx-1" v-for="link in courseRelLinks" :key="link.routeName">
+      <div class="mx-1" v-for="link in courseCategoryDetail.relLinks" :key="link.routeName">
         <a :href="link.url" class="btn btn-outline-secondary" target="_blank">{{ link.urlText }}</a>
       </div>
     </div>
@@ -165,7 +248,7 @@ defineProps<{
         <select class="form-select rounded-pill" v-model="selectedTag">
           <option disabled selected>選擇此標籤課程</option>
           <option value="">全部</option>
-          <option v-for="(tag, id) in tags" :key="id" :value="item">
+          <option v-for="(tag, id) in tags" :key="id" :value="tag">
             {{ tag }}
           </option>
         </select>
@@ -173,9 +256,9 @@ defineProps<{
     </div>
   </form>
 
-  <router-view></router-view>
+  <router-view :filterCourses="{ category: courseCategoryDetail.tag, searchValue, tag: selectedTag }"></router-view>
 
-  <footer class="py-3 mt-5" :class="{ 'pb-6': deadline.isExpired }">
+  <footer class="py-3 mt-5" :class="{ 'pb-6': countdown.isExpired }">
     <div class="container">
       <p class="d-flex flex-column flex-md-row justify-content-md-between">
         <small class="fw-normal">
@@ -193,7 +276,7 @@ defineProps<{
         bg-danger
         px-2
         py-2
-      " v-if="deadline.countStatus">
+      " v-if="countdown.isExpired">
 
     <div class="
             d-flex
@@ -207,12 +290,14 @@ defineProps<{
               justify-content-md-end
               pe-md-3 pe-0
             ">
-        <span class="me-md-5 fw-bold text-start">最後報名機會 已破 330 人報名<br class="d-md-none d-block" />｜2024
-          切版直播班</span>
+        <span class="me-md-5 fw-bold text-start">【熱烈報名中】
+          後端工程師-資料庫體驗營
+          <!-- <br class="d-md-none d-block" />｜2024 切版直播班 -->
+        </span>
 
         <div class="d-flex justify-content-start text-white text-nowrap">
-          <span class="fw-bold">{{ deadline.days }} 天 {{ deadline.hours }} 時
-            {{ deadline.minutes }} 分 {{ deadline.seconds }} 秒</span>
+          <span class="fw-bold">{{ countdown.days }} 天 {{ countdown.hours }} 時
+            {{ countdown.minutes }} 分 {{ countdown.seconds }} 秒</span>
         </div>
       </div>
       <div class="
@@ -220,9 +305,9 @@ defineProps<{
               justify-content-md-start justify-content-end
               ps-md-3 ps-0
             ">
-        <a href="https://www.hexschool.com/courses/web-layout-training-1st.html" target="_blank"
+        <a href="https://www.hexschool.com/2024/10/02/2024-10-02-backend-database-camping/" target="_blank"
           class="btn btn-dark btn-sm rounded-0">
-          晚鳥 66 折
+          立即享優惠
           <IconArrowRight />
         </a>
       </div>

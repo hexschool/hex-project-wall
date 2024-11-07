@@ -10,9 +10,10 @@ const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: '',
+          path: '/',
           name: 'home',
-          component: () => import('../views/HomeView.vue')
+          component: () => import('../views/HomeView.vue'),
+          props: true
         }
       ]
     }
