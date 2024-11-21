@@ -180,6 +180,10 @@ const onClickHandler = (course) => {
   // tag 選項更新
   tags.value = categories.value[course.tag];
 
+  // 搜尋與下拉選項回到初始狀態
+  searchValue.value = '';
+  selectedTag.value = '';
+
   // route 更新
   router.replace({
     query: {
@@ -192,7 +196,7 @@ const onClickHandler = (course) => {
 
 // 活動倒數公告
 const countdown = ref({
-  isExpired: true,
+  isExpired: false,
   seconds: 0,
   minutes: 0,
   hours: 0,

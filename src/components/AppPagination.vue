@@ -27,7 +27,7 @@ const onClickHandler = (newPage) => {
 watch(
   () => route.query.category,
   () => {
-    onClickHandler(1)
+    onClickHandler(1);
   }
 );
 
