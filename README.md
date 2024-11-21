@@ -1,20 +1,10 @@
-# vue3-project-wall
+# 2024 作品牆 vue3-project-wall
 
-This template should help get you started developing with Vue 3 in Vite.
+## 如何在本地端啟動系統
 
-## Recommended IDE Setup
+Node.js 版本號：v20
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+### Project Setup
 
 ```sh
 npm install
@@ -43,3 +33,12 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+## 如何將開發好的程式碼佈署至 PROD 環境
+
+GitHub 發 PR Merge 到 Main 之後 CI/CD 會自動部署
+
+## 環境變數
+
+VITE_APP_API=
+VITE_APP_PATH=

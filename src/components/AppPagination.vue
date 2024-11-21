@@ -1,16 +1,41 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, defineEmits, watch } from "vue";
 
-const onClickHandler = (page: number) => {
-  console.log(page);
+import { VueAwesomePaginate } from 'vue-awesome-paginate'
+import 'vue-awesome-paginate/dist/style.css'
+
+import { useRoute } from 'vue-router';
+const route = useRoute();
+
+defineProps({
+  projects: {
+    type: Object,
+    default: () => { },
+  },
+});
+
+const emit = defineEmits(["update:currentPage"]);
+const currentPage = ref(1);
+const itemsPerPage = ref(21);
+
+const onClickHandler = (newPage) => {
+  currentPage.value = newPage;
+  emit('update:currentPage', newPage);
 };
 
-const currentPage = ref(1);
+// 路由改變時回到第一頁
+watch(
+  () => route.query.category,
+  () => {
+    onClickHandler(1);
+  }
+);
+
 </script>
 <template>
   <div class="d-flex justify-content-center py-5">
-    <vue-awesome-paginate :total-items="50" :items-per-page="21" :max-pages-shown="5" v-model="currentPage"
-      @click="onClickHandler" />
+    <VueAwesomePaginate :total-items="projects.length" :items-per-page="itemsPerPage" :max-pages-shown="5"
+      v-model="currentPage" @click="onClickHandler" />
   </div>
 </template>
 
