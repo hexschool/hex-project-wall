@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineEmits, watch } from "vue";
+import { ref, watch } from "vue";
 
 import { VueAwesomePaginate } from 'vue-awesome-paginate'
 import 'vue-awesome-paginate/dist/style.css'
