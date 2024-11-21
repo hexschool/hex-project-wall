@@ -8,7 +8,7 @@ import { useRoute, useRouter } from 'vue-router';
 import httpRequest from '../apis/httpRequest';
 
 
-import activityCountdown from '../composables/activityCountdown';
+import countdownActivity from '../composables/countdownActivity';
 
 
 // const { countdown, timeId } = activityCountdown()
@@ -151,13 +151,17 @@ const selectedTag = ref('');
 
 
 onMounted(async () => {
-  const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/refs/heads/master/category.json');
-  categories.value = data;
+  try {
+    const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/refs/heads/master/category.json');
+    categories.value = data;
 
-  // 透過網址分類進來
-  if (route.query.category) {
-    const category = courseCategoryList.value.filter((courseCategory) => courseCategory.tag === route.query.category);
-    onClickHandler(category[0]);
+    // 透過網址分類進來
+    if (route.query.category) {
+      const category = courseCategoryList.value.filter((courseCategory) => courseCategory.tag === route.query.category);
+      onClickHandler(category[0]);
+    }
+  } catch (err) {
+    console.log(err);
   }
 })
 
@@ -197,7 +201,7 @@ const countdown = ref({
 
 const deadline = ref('Nov 13 2024 23:59:59');
 if (countdown.value.isExpired) {
-  activityCountdown(deadline.value, (updatedDeadline) => {
+  countdownActivity(deadline.value, (updatedDeadline) => {
     countdown.value = { ...updatedDeadline };
   });
 }

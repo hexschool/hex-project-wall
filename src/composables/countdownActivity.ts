@@ -8,7 +8,7 @@ const countdown = {
 
 // const timeId = ref(null)
 
-const activityCountdown = (timer: string, callback) => {
+const countdownActivity = (timer: string, callback) => {
   const countdownDate = new Date(timer).getTime()
   //  timeId.value = setInterval((x) => {
   setInterval((x) => {
@@ -29,8 +29,8 @@ const activityCountdown = (timer: string, callback) => {
   }, 1000)
 }
 // export default {
-//   activityCountdown,
+//   countdownActivity,
 //   timeId,
 // }
 
-export default activityCountdown
+export default countdownActivity

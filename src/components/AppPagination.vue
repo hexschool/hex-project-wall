@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, watch } from "vue";
 
 import { VueAwesomePaginate } from 'vue-awesome-paginate'
 import 'vue-awesome-paginate/dist/style.css'
+
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 defineProps({
   projects: {
@@ -19,6 +22,14 @@ const onClickHandler = (newPage) => {
   currentPage.value = newPage;
   emit('update:currentPage', newPage);
 };
+
+// 路由改變時回到第一頁
+watch(
+  () => route.query.category,
+  () => {
+    onClickHandler(1)
+  }
+);
 
 </script>
 <template>

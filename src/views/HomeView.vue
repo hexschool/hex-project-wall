@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 import AppCard from '../components/AppCard.vue';
 import AppPagination from '../components/AppPagination.vue';
 
 import httpRequest from '../apis/httpRequest';
-
-import { useRoute } from 'vue-router';
-const route = useRoute();
-
 
 const props = defineProps({
   filterCourses: {
@@ -21,11 +17,14 @@ const props = defineProps({
   }
 });
 
-
 const projects = ref([]);
 onMounted(async () => {
-  const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/master/data.json')
-  projects.value = data;
+  try {
+    const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/master/data.json')
+    projects.value = data;
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 const filteredCourses = computed(() => {
@@ -57,16 +56,6 @@ const pagedCourses = computed(() => {
   const end = start + itemsPerPage;
   return filteredCourses.value.slice(start, end);
 });
-
-// 路由改變時回到第一頁
-watch(
-  () => route.query.category,
-  () => {
-    currentPage.value = 1
-  }
-);
-
-
 </script>
 
 <template>
