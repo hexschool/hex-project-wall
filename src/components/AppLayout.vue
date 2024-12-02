@@ -5,7 +5,7 @@ import IconArrowRight from './icons/IconArrorRight.vue';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import httpRequest from '../apis/httpRequest';
+import { apiGetCategories } from '../apis/data';
 
 
 import countdownActivity from '../composables/countdownActivity';
@@ -152,7 +152,7 @@ const selectedTag = ref('');
 
 onMounted(async () => {
   try {
-    const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/refs/heads/master/category.json');
+    const { data } = await apiGetCategories();
     categories.value = data;
 
     // 透過網址分類進來

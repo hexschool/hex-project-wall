@@ -4,7 +4,7 @@ import { onMounted, ref, computed } from 'vue';
 import AppCard from '../components/AppCard.vue';
 import AppPagination from '../components/AppPagination.vue';
 
-import httpRequest from '../apis/httpRequest';
+import { apiGetProjects } from '../apis/data';
 
 const props = defineProps({
   filterCourses: {
@@ -20,7 +20,7 @@ const props = defineProps({
 const projects = ref([]);
 onMounted(async () => {
   try {
-    const { data } = await httpRequest.http.get('https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/master/data.json')
+    const { data } = await apiGetProjects();
     projects.value = data;
   } catch (err) {
     console.log(err);
