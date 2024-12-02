@@ -37,8 +37,3 @@ npm run lint
 ## 如何將開發好的程式碼佈署至 PROD 環境
 
 GitHub 發 PR Merge 到 Main 之後 CI/CD 會自動部署
-
-## 環境變數
-
-VITE_APP_API=
-VITE_APP_PATH=

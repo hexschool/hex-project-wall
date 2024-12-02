@@ -72,7 +72,7 @@ const isHovered = (id) => {
           <a :href="project.url" target="_blank" class="stretched-link me-auto">
             <h2 class="h6 card-title mb-0">{{ project.title }}</h2>
           </a>
-          <button type="button" class="btn p-0 position-relative z-1" @click="onClickHandler(project.id)">
+          <button type="button" class="btn p-0 position-relative z-1 btn-hover" @click="onClickHandler(project.id)">
             <IconChevronDown />
             <div v-if="isActive(project.id)" class="
               position-absolute
@@ -119,6 +119,10 @@ const isHovered = (id) => {
 </template>
 
 <style scoped>
+.btn-hover:hover {
+  color: #3eaf7c;
+}
+
 .card-img-top {
   object-fit: cover;
   height: 312px;
