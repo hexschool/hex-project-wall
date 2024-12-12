@@ -1,36 +1,50 @@
-const countdown = {
-  isExpired: true,
-  seconds: 0,
-  minutes: 0,
-  hours: 0,
-  days: 0
+import { ref, onUnmounted } from 'vue'
+
+// 定義倒數邏輯
+export function useCountdown(date: string) {
+  const formattedTime = ref('') // 儲存格式化後的時間字符串
+  let interval: ReturnType<typeof setInterval> | null = null
+
+  const targetDate = new Date(date)
+
+  const calculateRemainingTime = () => {
+    const now = new Date()
+    const timeDiff = Math.floor((targetDate.getTime() - now.getTime()) / 1000)
+    return Math.max(timeDiff, 0)
+  }
+
+  const formatTime = (time: number) => {
+    const days = Math.floor(time / (24 * 60 * 60))
+    const hours = Math.floor((time % (24 * 60 * 60)) / (60 * 60))
+    const minutes = Math.floor((time % (60 * 60)) / 60)
+    const seconds = time % 60
+
+    return time > 0 ? `${days} 天 ${hours} 時 ${minutes} 分 ${seconds} 秒` : ''
+  }
+
+  const startCountdown = () => {
+    formattedTime.value = formatTime(calculateRemainingTime())
+    if (interval) clearInterval(interval)
+
+    interval = setInterval(() => {
+      const newTime = calculateRemainingTime()
+      formattedTime.value = formatTime(newTime)
+
+      // 如果時間倒數到 0，停止計時器並讓畫面隱藏
+      if (newTime <= 0 && interval) {
+        clearInterval(interval)
+        interval = null
+      }
+    }, 1000)
+  }
+
+  onUnmounted(() => {
+    if (interval) clearInterval(interval)
+  })
+
+  startCountdown()
+
+  return {
+    formattedTime
+  }
 }
-
-// const timeId = ref(null)
-
-const countdownActivity = (timer: string, callback) => {
-  const countdownDate = new Date(timer).getTime()
-  //  timeId.value = setInterval((x) => {
-  setInterval((x) => {
-    const now = new Date().getTime()
-    const distance = countdownDate - now
-
-    countdown.days = Math.floor(distance / (1000 * 60 * 60 * 24))
-    countdown.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    countdown.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-    countdown.seconds = Math.floor((distance % (1000 * 60)) / 1000)
-    if (distance < 0) {
-      clearInterval(x)
-      countdown.isExpired = false
-    } else {
-      countdown.isExpired = true
-    }
-    callback(countdown)
-  }, 1000)
-}
-// export default {
-//   countdownActivity,
-//   timeId,
-// }
-
-export default countdownActivity

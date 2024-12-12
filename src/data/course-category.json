@@ -1,0 +1,124 @@
+[
+  {
+    "id": 0,
+    "name": "全部",
+    "category": "All",
+    "description": "六角學員作品牆，程式新手也能完成獨一無二的網頁作品。",
+    "isActive": true,
+    "relLinks": [
+      {
+        "routeName": "all-courses",
+        "url": "https://www.hexschool.com/courses/?category=all-courses",
+        "urlText": "我也想做出專屬作品！"
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "Vue",
+    "category": "Vue",
+    "description": "使用業界熱門框架完成求職作品，提升職場競爭力！",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "vue3",
+        "url": "https://www.hexschool.com/courses/vue3.html",
+        "urlText": "前往 Vue 影音課"
+      },
+      {
+        "routeName": "vue-training",
+        "url": "https://www.hexschool.com/courses/vue-training.html",
+        "urlText": "前往 Vue 直播班"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "切版直播班",
+    "category": "HTML",
+    "description": "用三個月的時間，將切版技能練到巔峰。",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "web-layout-training-1st",
+        "url": "https://www.hexschool.com/courses/web-layout-training-1st.html",
+        "urlText": "我也想提升切版力！"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Node",
+    "category": "Node",
+    "description": "團隊共同完成符合商業邏輯的 Node.js 專案。",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "node-project-training",
+        "url": "https://www.hexschool.com/courses/node-project-training.html",
+        "urlText": "完成專案，提升競爭力！"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "JS",
+    "category": "JS",
+    "description": "從基礎到 AJAX，體驗前端工程師的第一課！",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "js-training",
+        "url": "https://www.hexschool.com/courses/js-training.html",
+        "urlText": "循序漸進掌握 JS 邏輯"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Bootstrap",
+    "category": "Bootstrap",
+    "description": "使用 Bootstrap 快速完成切版版型，從設計稿到可觀賞網頁的不二選擇！",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "bootstrap5",
+        "url": "https://www.hexschool.com/courses/bootstrap5.html",
+        "urlText": "掌握業界必備網頁設計框架！"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "React",
+    "category": "React",
+    "description": "使用業界熱門框架完成求職作品，提升職場競爭力！",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "react",
+        "url": "https://www.hexschool.com/courses/react.html",
+        "urlText": "前往 React 影音課！"
+      },
+      {
+        "routeName": "js-react-training",
+        "url": "https://www.hexschool.com/courses/js-react-training.html",
+        "urlText": "前往前端工程師培訓班"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "UI",
+    "category": "UI",
+    "description": "好的設計，讓網站品質大加分！",
+    "isActive": false,
+    "relLinks": [
+      {
+        "routeName": "ui",
+        "url": "https://www.hexschool.com/courses/ui.html",
+        "urlText": "我也想畫出有程式邏輯的設計稿！"
+      }
+    ]
+  }
+]

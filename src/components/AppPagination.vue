@@ -1,24 +1,28 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import type { Ref } from 'vue';
+import type { Project } from '../types/global.type';
 
+import { ref, watch } from "vue";
+import { useRoute } from 'vue-router';
+
+// plugin
 import { VueAwesomePaginate } from 'vue-awesome-paginate'
 import 'vue-awesome-paginate/dist/style.css'
 
-import { useRoute } from 'vue-router';
+interface Props {
+  projects: Project[]
+}
+
 const route = useRoute();
 
-defineProps({
-  projects: {
-    type: Object,
-    default: () => { },
-  },
-});
+const props = defineProps<Props>();
 
 const emit = defineEmits(["update:currentPage"]);
-const currentPage = ref(1);
-const itemsPerPage = ref(21);
 
-const onClickHandler = (newPage) => {
+const currentPage: Ref<number> = ref(1);
+const itemsPerPage: Ref<number> = ref(21);
+
+const onClickHandler = (newPage: number) => {
   currentPage.value = newPage;
   emit('update:currentPage', newPage);
 };
@@ -34,7 +38,7 @@ watch(
 </script>
 <template>
   <div class="d-flex justify-content-center py-5">
-    <VueAwesomePaginate :total-items="projects.length" :items-per-page="itemsPerPage" :max-pages-shown="5"
+    <VueAwesomePaginate :total-items="props.projects.length" :items-per-page="itemsPerPage" :max-pages-shown="5"
       v-model="currentPage" @click="onClickHandler" />
   </div>
 </template>

@@ -1,19 +1,26 @@
 <script setup lang="ts">
+
+import type { Ref } from 'vue';
+import type { Project } from '../types/global.type';
+
 import { ref } from 'vue';
 
+
+// icons
 import IconChevronDown from './icons/IconChevronDown.vue';
 import IconBehance from './icons/IconBehance.vue';
 import IconGitHub from './icons/IconGitHub.vue';
 import IconLink from './icons/IconLink.vue';
 
-const props = defineProps({
-  projects: {
-    type: Object,
-    default: () => { },
-  },
-});
+interface Props {
+  projects: Project[]
+}
 
-const colorMap = {
+const props = defineProps<Props>();
+
+const colorMap: {
+  [key: string]: string
+} = {
   HTML: '#005856',
   Bootstrap: '#7952b3',
   JS: '#8E240E',
@@ -24,17 +31,15 @@ const colorMap = {
   default: '#000000'
 };
 
-const activeCardId = ref(null);
-const onClickHandler = (id) => {
-  activeCardId.value = activeCardId.value === id ? null : id;
-};
-const isActive = (id) => {
-  return activeCardId.value === id;
+const clickedProjectId: Ref<string | null> = ref(null);
+const hoveredProjectId: Ref<string | null> = ref(null);
+
+const onClickHandler = (id: string) => {
+  clickedProjectId.value = clickedProjectId.value === id ? null : id; // 點到一樣卡就關閉(null)，否則開啟(id)
 };
 
-const hoveredProjectId = ref(null);
-const isHovered = (id) => {
-  return hoveredProjectId.value === id;
+const isToggled = (id: string, stateId: string | null) => {
+  return stateId === id;
 }
 </script>
 
@@ -53,7 +58,7 @@ const isHovered = (id) => {
             :style="{ backgroundColor: colorMap[project.course_tag] || colorMap.default }">{{ project.course
             }}</span>
           <transition name="fade">
-            <div v-show="isHovered(project.id)" class="overlay w-100 position-absolute bottom-0 px-3">
+            <div v-show="isToggled(project.id, hoveredProjectId)" class="overlay w-100 position-absolute bottom-0 px-3">
               <div class="overlay-text d-flex justify-content-between text-white"
                 :class="{ 'mb-2': project.tags.length > 1 }">
                 <h5 class="fs-6 mb-0">作者：{{ project.name }}</h5>
@@ -74,7 +79,7 @@ const isHovered = (id) => {
           </a>
           <button type="button" class="btn p-0 position-relative z-1 btn-hover" @click="onClickHandler(project.id)">
             <IconChevronDown />
-            <div v-if="isActive(project.id)" class="
+            <div v-if="isToggled(project.id, clickedProjectId)" class="
               position-absolute
               end-0
               border
