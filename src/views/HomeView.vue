@@ -1,23 +1,34 @@
 <script setup lang="ts">
+import type { Ref } from 'vue';
+import type { Project } from '../types/global.type';
+
 import { onMounted, ref, computed } from 'vue';
 
+// components
 import AppCard from '../components/AppCard.vue';
 import AppPagination from '../components/AppPagination.vue';
 
+// apis
 import { apiGetProjects } from '../apis/data';
 
-const props = defineProps({
+interface Props {
   filterCourses: {
-    type: Object,
-    default: () => ({
-      category: 'All',
-      searchValue: '',
-      tag: ''
-    })
+    category: string
+    searchValue: string
+    tag: string
   }
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  filterCourses: () => ({
+    category: 'All',
+    searchValue: '',
+    tag: ''
+  })
 });
 
-const projects = ref([]);
+
+const projects: Ref<Project[]> = ref([]);
 onMounted(async () => {
   try {
     const { data } = await apiGetProjects();
@@ -63,6 +74,6 @@ const pagedCourses = computed(() => {
     <section class="py-5">
       <AppCard :projects="pagedCourses" />
     </section>
-    <AppPagination :projects="filteredCourses" @update:currentPage="(newPage) => currentPage = newPage" />
+    <AppPagination :projects="filteredCourses" @update:currentPage="(newPage: number) => currentPage = newPage" />
   </main>
 </template>
