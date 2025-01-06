@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
-import type { Project } from '../types/global.type';
+import type { Project } from '@/types/global.type';
 
 import { ref, watch } from "vue";
 import { useRoute } from 'vue-router';
@@ -35,6 +35,7 @@ watch(
   }
 );
 
+defineExpose({ currentPage })
 </script>
 <template>
   <div class="d-flex justify-content-center py-5">

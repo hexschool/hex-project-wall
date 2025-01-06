@@ -5,7 +5,7 @@ import httpRequest from '../apis/httpRequest'
  *
  * @returns {Promise} A promise that resolves to the response data containing the list of projects.
  */
-export const apiGetProjects = (): Promise<any> =>
+const apiGetProjects = (): Promise<any> =>
   httpRequest.http.get(
     'https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/master/data.json'
   )
@@ -15,7 +15,9 @@ export const apiGetProjects = (): Promise<any> =>
  *
  * @returns {Promise} A promise that resolves to the response data containing the list of projects.
  */
-export const apiGetCategories = (): Promise<any> =>
+const apiGetCategories = (): Promise<any> =>
   httpRequest.http.get(
     'https://raw.githubusercontent.com/hexschool/hexschoolActionAPI/refs/heads/master/category.json'
   )
+
+export default { apiGetProjects, apiGetCategories }

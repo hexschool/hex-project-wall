@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
-import type { Project } from '../types/global.type';
+import type { Project } from '@/types/global.type';
 
 import { onMounted, ref, computed } from 'vue';
 
 // components
-import AppCard from '../components/AppCard.vue';
-import AppPagination from '../components/AppPagination.vue';
+import AppCard from '@/components/AppCard.vue';
+import AppPagination from '@/components/AppPagination.vue';
 
 // apis
-import { apiGetProjects } from '../apis/data';
+import apis from '@/apis/data';
+const { apiGetProjects } = apis;
 
 interface Props {
   filterCourses: {
@@ -67,6 +68,9 @@ const pagedCourses = computed(() => {
   const end = start + itemsPerPage;
   return filteredCourses.value.slice(start, end);
 });
+
+// 測試需要使用
+defineExpose({ filteredCourses, pagedCourses, currentPage, projects })
 </script>
 
 <template>

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 
 import type { Ref } from 'vue';
-import type { Project } from '../types/global.type';
+import type { Project } from '@/types/global.type';
 
 import { ref } from 'vue';
 
 
 // icons
-import IconChevronDown from './icons/IconChevronDown.vue';
-import IconBehance from './icons/IconBehance.vue';
-import IconGitHub from './icons/IconGitHub.vue';
-import IconLink from './icons/IconLink.vue';
+import IconChevronDown from '@/components/icons/IconChevronDown.vue';
+import IconBehance from '@/components/icons/IconBehance.vue';
+import IconGitHub from '@/components/icons/IconGitHub.vue';
+import IconLink from '@/components/icons/IconLink.vue';
 
 interface Props {
   projects: Project[]
@@ -41,6 +41,8 @@ const onClickHandler = (id: string) => {
 const isToggled = (id: string, stateId: string | null) => {
   return stateId === id;
 }
+
+defineExpose({ hoveredProjectId, clickedProjectId })
 </script>
 
 <template>
