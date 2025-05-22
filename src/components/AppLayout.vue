@@ -151,7 +151,7 @@ onUnmounted(() => {
           <input class="form-control rounded-pill" v-model="searchValue" type="search" placeholder="搜尋此標籤下的作品"
             aria-label="Search" />
         </div>
-        <div class="col-md-2 mb-md-0">
+        <!-- <div class="col-md-2 mb-md-0">
           <select class="form-select rounded-pill" v-model="selectedTag">
             <option disabled selected>選擇此標籤課程</option>
             <option value="">全部</option>
@@ -159,7 +159,7 @@ onUnmounted(() => {
               {{ tag }}
             </option>
           </select>
-        </div>
+        </div> -->
       </div>
     </form>
 
